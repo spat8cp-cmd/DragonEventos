@@ -1,0 +1,79 @@
+// Interfaz del Producto
+interface Evento {
+    void mostrarDetalles();
+    void registrarAsistente(String nombre);
+}
+
+// Productos Concretos
+class Concierto implements Evento {
+    @Override
+    public void mostrarDetalles() {
+        System.out.println("Evento: Concierto musical en vivo");
+    }
+
+    @Override
+    public void registrarAsistente(String nombre) {
+        System.out.println("Asistente " + nombre + " registrado al concierto");
+    }
+}
+
+class Conferencia implements Evento {
+    @Override
+    public void mostrarDetalles() {
+        System.out.println("Evento: Conferencia académica");
+    }
+
+    @Override
+    public void registrarAsistente(String nombre) {
+        System.out.println("Asistente " + nombre + " registrado a la conferencia");
+    }
+}
+
+// Clase Creadora (Factory Method)
+abstract class GestorEventos {
+
+    // Factory Method
+    public abstract Evento crearEvento();
+
+    // Lógica de negocio
+    public void gestionarEvento(String nombreAsistente) {
+        Evento evento = crearEvento();
+        evento.mostrarDetalles();
+        evento.registrarAsistente(nombreAsistente);
+    }
+}
+
+// Creadores Concretos
+class GestorConciertos extends GestorEventos {
+    @Override
+    public Evento crearEvento() {
+        return new Concierto();
+    }
+}
+
+class GestorConferencias extends GestorEventos {
+    @Override
+    public Evento crearEvento() {
+        return new Conferencia();
+    }
+}
+
+// Aplicación Cliente
+public class Aplicacion {
+    public static void main(String[] args) {
+
+        GestorEventos gestor;
+
+        String tipoEvento = "Concierto"; // Cambia a "Conferencia" para probar
+
+        if (tipoEvento.equalsIgnoreCase("Concierto")) {
+            gestor = new GestorConciertos();
+        } else if (tipoEvento.equalsIgnoreCase("Conferencia")) {
+            gestor = new GestorConferencias();
+        } else {
+            throw new IllegalArgumentException("Tipo de evento no válido");
+        }
+
+        gestor.gestionarEvento("Sebastian");
+    }
+}
