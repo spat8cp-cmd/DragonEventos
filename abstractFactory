@@ -1,0 +1,107 @@
+// ====================== PRODUCTOS ABSTRACTOS ======================
+interface HistorialMedico {
+    void generarHistorial();
+}
+
+interface Receta {
+    void generarReceta();
+}
+
+// ====================== PRODUCTOS CONCRETOS (PERROS) ======================
+class HistorialPerro implements HistorialMedico {
+    @Override
+    public void generarHistorial() {
+        System.out.println("Generando historial médico para PERRO 🐶");
+    }
+}
+
+class RecetaPerro implements Receta {
+    @Override
+    public void generarReceta() {
+        System.out.println("Generando receta para PERRO 🐶");
+    }
+}
+
+// ====================== PRODUCTOS CONCRETOS (GATOS) ======================
+class HistorialGato implements HistorialMedico {
+    @Override
+    public void generarHistorial() {
+        System.out.println("Generando historial médico para GATO 🐱");
+    }
+}
+
+class RecetaGato implements Receta {
+    @Override
+    public void generarReceta() {
+        System.out.println("Generando receta para GATO 🐱");
+    }
+}
+
+// ====================== FABRICA ABSTRACTA ======================
+interface FabricaVeterinaria {
+    HistorialMedico crearHistorial();
+    Receta crearReceta();
+}
+
+// ====================== FABRICAS CONCRETAS ======================
+class FabricaPerro implements FabricaVeterinaria {
+    @Override
+    public HistorialMedico crearHistorial() {
+        return new HistorialPerro();
+    }
+
+    @Override
+    public Receta crearReceta() {
+        return new RecetaPerro();
+    }
+}
+
+class FabricaGato implements FabricaVeterinaria {
+    @Override
+    public HistorialMedico crearHistorial() {
+        return new HistorialGato();
+    }
+
+    @Override
+    public Receta crearReceta() {
+        return new RecetaGato();
+    }
+}
+
+// ====================== CLIENTE ======================
+class AplicacionVeterinaria {
+    private HistorialMedico historial;
+    private Receta receta;
+
+    public AplicacionVeterinaria(FabricaVeterinaria fabrica) {
+        historial = fabrica.crearHistorial();
+        receta = fabrica.crearReceta();
+    }
+
+    public void generarDocumentos() {
+        historial.generarHistorial();
+        receta.generarReceta();
+    }
+}
+
+// ====================== MAIN ======================
+public class Main {
+    public static void main(String[] args) {
+
+        // Simulación de configuración (puede venir de usuario o sistema)
+        String tipoMascota = "perro"; // cambiar a "gato"
+
+        FabricaVeterinaria fabrica;
+
+        if (tipoMascota.equalsIgnoreCase("perro")) {
+            fabrica = new FabricaPerro();
+        } else if (tipoMascota.equalsIgnoreCase("gato")) {
+            fabrica = new FabricaGato();
+        } else {
+            throw new RuntimeException("Tipo de mascota no soportado");
+        }
+
+        AplicacionVeterinaria app = new AplicacionVeterinaria(fabrica);
+        app.generarDocumentos();
+    }
+}
